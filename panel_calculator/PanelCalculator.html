@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar Panel Calculator</title>
+    <style>
+:root {
+    /* Light theme variables */
+    --primary: #2563eb;
+    --success: #16a34a;
+    --bg-light: #f8fafc;
+    --text-dark: #1e293b;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --tooltip-bg: #1e293b;
+    --tooltip-text: #ffffff;
+}
+
+[data-theme="dark"] {
+    /* Dark theme variables */
+    --primary: #60a5fa;
+    --success: #22c55e;
+    --bg-light: #1e293b;
+    --text-dark: #f8fafc;
+    --shadow: 0 4px 6px -1px rgba(255, 255, 255, 0.1);
+    --card-bg: #2d3748;
+    --border-color: #4a5568;
+    --tooltip-bg: #f8fafc;
+    --tooltip-text: #1e293b;
+}
+
+/* General reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    animation: fadeIn 3s ease-in-out;
+    transition: background 0.5s ease, color 0.5s ease;
+}
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    /* background: var(--bg-light); */
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+    line-height: 1.5;
+    /* background: url('pexels-Google DeepMind-25626508.jpg') no-repeat center center fixed; Background image */
+    background: url('pexels-Martin  Péchy-304664.jpg') no-repeat center center fixed; /* Background image */
+
+    background-size: cover; /* Cover the entire screen */
+}
+
+/* Define the fadeIn animation */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Containers */
+.container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* Calculator Styling */
+.calculator {
+    /* background: var(--card-bg); */
+    background: url('pexels-Martin  Péchy-304664.jpg') no-repeat center center fixed; /* Background image */
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    background-size: cover; /* Cover the entire screen */
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    color: var(--text-dark);
+    transition: background 0.3s, color 0.3s;
+}
+
+.theme-toggle:hover {
+    background: var(--primary);
+    color: var(--tooltip-text);
+}
+
+/* Form Grid */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    background: var(--bg-light);
+    color: var(--text-dark);
+    transition: background 0.3s, color 0.3s;
+}
+
+/* Tooltip */
+.tooltip {
+    position: absolute;
+    right: 0.5rem;
+    top: 0;
+    cursor: help;
+}
+
+.tooltip:hover::after {
+    content: attr(data-tip);
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: var(--tooltip-bg);
+    color: var(--tooltip-text);
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    width: 200px;
+    z-index: 1;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* Buttons */
+.calculate-btn {
+    grid-column: 1 / -1;
+    background: var(--primary);
+    color: var(--tooltip-text);
+    border: none;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s ease, opacity 0.3s ease;
+}
+
+.calculate-btn:hover {
+    opacity: 0.9;
+}
+
+/* Results */
+.results {
+    display: none;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.results.active {
+    display: block;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.result-card {
+    background: var(--card-bg);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.result-card h3 {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.result-card .value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+/* Actions */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.action-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--primary);
+    border-radius: 0.5rem;
+    background: transparent;
+    color: var(--primary);
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+}
+
+.action-btn:hover {
+    background: var(--primary);
+    color: var(--tooltip-text);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .calculator {
+        padding: 1rem;
+    }
+}
+
+/* Panel Visualization */
+.panel-visualization {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 0.5rem;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: 0.5rem;
+}
+
+.panel {
+    aspect-ratio: 1;
+    background: var(--primary);
+    border-radius: 0.25rem;
+    opacity: 0.8;
+    transition: background 0.3s ease, opacity 0.3s ease;
+}
+/* For small devices (phones, <576px) */
+@media (max-width: 575.98px) {
+    .container {
+        padding: 0.5rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .header {
+        flex-direction: column;
+    }
+
+    .calculator {
+        padding: 1rem;
+    }
+
+    .calculate-btn {
+        font-size: 1rem;
+        padding: 0.8rem;
+    }
+}
+
+/* For medium devices (tablets, 576px to 768px) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .form-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    .calculator {
+        padding: 1.5rem;
+    }
+
+    .calculate-btn {
+        font-size: 1rem;
+    }
+}
+
+/* For large devices (desktops, >768px) */
+@media (min-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .form-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+}
+html {
+    font-size: 16px; /* Base size */
+}
+
+@media (max-width: 575.98px) {
+    html {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    html {
+        font-size: 15px;
+    }
+}
+
+
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="calculator">
+            <div class="header">
+                <h1>Solar Panel Calculator</h1>
+                <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+            </div>
+            
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Location</label>
+                    <span class="tooltip" data-tip="Enter your location for accurate sun hours calculation">ℹ️</span>
+                    <input type="text" id="location" placeholder="City, Country">
+                </div>
+                
+                <div class="input-group">
+                    <label>Monthly Electricity Usage (kWh)</label>
+                    <span class="tooltip" data-tip="Your average monthly electricity consumption">ℹ️</span>
+                    <input type="number" id="usage" placeholder="e.g., 900">
+                </div>
+
+                <div class="input-group">
+                    <label>Roof Area (m²)</label>
+                    <span class="tooltip" data-tip="Available roof area for solar panels">ℹ️</span>
+                    <input type="number" id="area" placeholder="e.g., 50">
+                </div>
+
+                <div class="input-group">
+                    <label>Solar Panel Efficiency (%)</label>
+                    <span class="tooltip" data-tip="Typical range: 15-20%">ℹ️</span>
+                    <input type="number" id="efficiency" placeholder="e.g., 18" value="18">
+                </div>
+
+                <div class="input-group">
+                    <label>Electricity Cost ($/kWh)</label>
+                    <span class="tooltip" data-tip="Your local electricity rate">ℹ️</span>
+                    <input type="number" id="cost" placeholder="e.g., 0.12" step="0.01" value="0.192">
+                </div>
+
+                <div class="input-group">
+                    <label>Daily Sun Hours</label>
+                    <span class="tooltip" data-tip="Average hours of sunlight per day">ℹ️</span>
+                    <input type="number" id="sunHours" placeholder="e.g., 5" step="0.1" value="5">
+                </div>
+
+                <button class="calculate-btn" onclick="calculateSolar()">Calculate Solar Potential</button>
+            </div>
+
+
+
+            <div class="results">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h3>System Size</h3>
+                        <div class="value" id="systemSize">-</div>
+                    </div>
+                    <div class="result-card">
+                        <h3>Annual Energy Production</h3>
+                        <div class="value" id="annualEnergy">-</div>
+                    </div>
+                    <div class="result-card">
+                        <h3>Number of Panels</h3>
+                        <div class="value" id="panelCount">-</div>
+                    </div>
+                    <div class="result-card">
+                        <h3>Estimated Cost</h3>
+                        <div class="value" id="estimatedCost">-</div>
+                    </div>
+                    <div class="result-card">
+                        <h3>Annual Savings</h3>
+                        <div class="value" id="annualSavings">-</div>
+                    </div>
+                    <div class="result-card">
+                        <h3>Payback Period</h3>
+                        <div class="value" id="paybackPeriod">-</div>
+                    </div>
+                </div>
+
+                <div class="panel-visualization" id="panelVisualization"></div>
+
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="saveResults()">Save Results</button>
+                    <button class="action-btn" onclick="printResults()">Print Results</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="weather"> 
+    </div>
+
+<script>
+        // Theme toggle
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // Define the API key and endpoint for OpenWeatherMap
+        const API_KEY = "758af034b61816932128678994ec2c43";
+        const WEATHER_API_URL = "https://api.openweathermap.org/data/2.5/weather";
+
+        // Check if geolocation is available
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                async function (position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    console.log(`Location: ${lat}, ${lon}`);
+
+                    try {
+                        // Fetch weather data using the coordinates
+                        const response = await fetch(
+                            `${WEATHER_API_URL}?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+                        );
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP Error: ${response.status}`);
+                        }
+
+                        const weatherData = await response.json();
+
+                        // Extract relevant weather information
+                        const { main, weather, name, sys } = weatherData;
+                        console.log(`Weather in ${name}:`);
+                        console.log(`Temperature: ${main.temp}°C`);
+                        console.log(`Condition: ${weather[0].description}`);
+                        console.log(`Sunrise: ${new Date(sys.sunrise * 1000).toLocaleTimeString()}`);
+                        console.log(`Sunset: ${new Date(sys.sunset * 1000).toLocaleTimeString()}`);
+                    } catch (error) {
+                        console.error("Failed to fetch weather data:", error.message);
+                    }
+                }
+            );
+        } else {
+            console.error("Geolocation is not supported in this browser.");
+        }
+
+        function displayWeather(data) {
+            const weatherDiv = document.getElementById("weather");
+            const { name, main, weather, sys } = data;
+
+            weatherDiv.innerHTML = `
+                <h2>Weather in ${name}</h2>
+                <p><strong>Temperature:</strong> ${main.temp}°C</p>
+                <p><strong>Condition:</strong> ${weather[0].description}</p>
+                <p><strong>Sunrise:</strong> ${new Date(sys.sunrise * 1000).toLocaleTimeString()}</p>
+                <p><strong>Sunset:</strong> ${new Date(sys.sunset * 1000).toLocaleTimeString()}</p>
+            `;
+        }
+
+
+
+        function calculateSolar() {
+            // Get input values
+            const usage = parseFloat(document.getElementById('usage').value);
+            const area = parseFloat(document.getElementById('area').value);
+            const efficiency = parseFloat(document.getElementById('efficiency').value) / 100;
+            const electricityCost = parseFloat(document.getElementById('cost').value);
+            const sunHours = parseFloat(document.getElementById('sunHours').value);
+
+            // Validate inputs
+            if (!validateInputs(usage, area, efficiency, electricityCost, sunHours)) {
+                return;
+            }
+
+            // Constants
+            const averagePanelWattage = 400; // Watts per panel
+            const averagePanelArea = 1.7; // m²
+            const installationCostPerWatt = 2.5; // $ per watt
+
+            // Calculations
+            const maxPanels = Math.floor(area / averagePanelArea);
+            const systemSizeKW = (maxPanels * averagePanelWattage) / 1000;
+            const dailyEnergy = systemSizeKW * sunHours * efficiency;
+            const annualEnergy = dailyEnergy * 365;
+            const installationCost = systemSizeKW * 1000 * installationCostPerWatt;
+            const annualSavings = annualEnergy * electricityCost;
+            const paybackYears = installationCost / annualSavings;
+
+            // Update results
+            document.getElementById('systemSize').textContent = `${systemSizeKW.toFixed(1)} kW`;
+            document.getElementById('annualEnergy').textContent = `${Math.round(annualEnergy)} kWh`;
+            document.getElementById('panelCount').textContent = maxPanels;
+            document.getElementById('estimatedCost').textContent = `$${Math.round(installationCost).toLocaleString()}`;
+            document.getElementById('annualSavings').textContent = `$${Math.round(annualSavings).toLocaleString()}`;
+            document.getElementById('paybackPeriod').textContent = `${paybackYears.toFixed(1)} years`;
+
+            // Show results
+            document.querySelector('.results').classList.add('active');
+
+            // Visualize panels
+            visualizePanels(maxPanels);
+        }
+
+        function validateInputs(...inputs) {
+            if (inputs.some(input => isNaN(input) || input <= 0)) {
+                alert('Please fill in all fields with valid positive numbers');
+                return false;
+            }
+            return true;
+        }
+
+        function visualizePanels(count) {
+            const container = document.getElementById('panelVisualization');
+            container.innerHTML = '';
+            
+            // Limit visualization to 100 panels for performance
+            const displayCount = Math.min(count, 100);
+            
+            for (let i = 0; i < displayCount; i++) {
+                const panel = document.createElement('div');
+                panel.className = 'panel';
+                container.appendChild(panel);
+            }
+            
+            if (count > 100) {
+                const note = document.createElement('div');
+                note.style.gridColumn = '1 / -1';
+                note.style.textAlign = 'center';
+                note.textContent = `Showing 100 of ${count} panels`;
+                container.appendChild(note);
+            }
+        }
+
+        function saveResults() {
+            const results = {
+                systemSize: document.getElementById('systemSize').textContent,
+                annualEnergy: document.getElementById('annualEnergy').textContent,
+                panelCount: document.getElementById('panelCount').textContent,
+                estimatedCost: document.getElementById('estimatedCost').textContent,
+                annualSavings: document.getElementById('annualSavings').textContent,
+                paybackPeriod: document.getElementById('paybackPeriod').textContent
+            };
+
+            const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'solar-calculation-results.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function printResults() {
+            window.print();
+        }
+
+        function toggleTheme() {
+            const root = document.documentElement;
+            const currentTheme = root.getAttribute('data-theme');
+            root.setAttribute('data-theme', currentTheme === 'light' ? 'dark' : 'light');
+        }
+    </script>
+</body>
+</html>
