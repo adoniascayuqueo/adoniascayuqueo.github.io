@@ -1,37 +1,139 @@
-// Scroll Progress Bar
-window.onscroll = function() {
-    let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-    let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    let scrolled = (winScroll / height) * 100;
-    document.querySelector(".progress-bar").style.width = scrolled + "%";
-    
-    // Navbar transformation on scroll
-    if (window.scrollY > 50) {
-        document.querySelector('.navbar').classList.add('scrolled');
-    } else {
-        document.querySelector('.navbar').classList.remove('scrolled');
+document.addEventListener('DOMContentLoaded', () => {
+    const progressBar = document.querySelector(".progress-bar");
+    const navbar = document.querySelector('.navbar');
+    const navLinks = document.querySelector('.nav-links');
+    let mobileMenuBtn;
+
+    // Improved Scroll Progress Bar with Requestanimationframe
+    function updateScrollProgress() {
+        const winScroll = window.pageYOffset || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollPercentage = (winScroll / height) * 100;
+        
+        requestAnimationFrame(() => {
+            progressBar.style.width = `${scrollPercentage}%`;
+        });
     }
-};
 
-// Updated JavaScript for better performance and bug fixes
-document.addEventListener('DOMContentLoaded', function() {
-// Mobile menu functionality
-const mobileMenuBtn = document.createElement('button');
-mobileMenuBtn.className = 'mobile-menu-btn';
-mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+    // Navbar Transformation with Debounce
+    function handleNavbarScroll() {
+        requestAnimationFrame(() => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    }
 
-const navbar = document.querySelector('.navbar');
-const navLinks = document.querySelector('.nav-links');
+    // Accessibility-Enhanced Mobile Menu
+    function createMobileMenu() {
+        // Only create if not already exists and screen is small
+        if (window.innerWidth <= 768 && !document.querySelector('.mobile-menu-btn')) {
+            mobileMenuBtn = document.createElement('button');
+            mobileMenuBtn.className = 'mobile-menu-btn';
+            mobileMenuBtn.setAttribute('aria-label', 'Toggle Mobile Menu');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars" aria-hidden="true"></i>';
+            
+            navbar.appendChild(mobileMenuBtn);
 
-if (window.innerWidth <= 768) {
-    navbar.appendChild(mobileMenuBtn);
-}
+            // Accessibility Enhancements
+            navLinks.setAttribute('aria-hidden', 'true');
+            navLinks.setAttribute('data-mobile-state', 'closed');
 
-mobileMenuBtn.addEventListener('click', () => {
-navLinks.classList.toggle('active');
+            mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+        }
+    }
+
+    // Comprehensive Mobile Menu Toggle
+    function toggleMobileMenu() {
+        const isOpen = navLinks.getAttribute('data-mobile-state') === 'open';
+        
+        navLinks.classList.toggle('active');
+        mobileMenuBtn.classList.toggle('active');
+        
+        // Update accessibility attributes
+        navLinks.setAttribute('aria-hidden', isOpen.toString());
+        navLinks.setAttribute('data-mobile-state', isOpen ? 'closed' : 'open');
+        mobileMenuBtn.setAttribute('aria-expanded', (!isOpen).toString());
+    }
+
+    // Close Mobile Menu on Link Click
+    function setupMobileNavLinkClosing() {
+        const navLinkElements = navLinks.querySelectorAll('a');
+        
+        navLinkElements.forEach(link => {
+            link.addEventListener('click', () => {
+                // Smooth scroll to section
+                const targetId = link.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                
+                if (targetSection) {
+                    targetSection.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+
+                // Close mobile menu
+                if (window.innerWidth <= 768) {
+                    navLinks.classList.remove('active');
+                    navLinks.setAttribute('data-mobile-state', 'closed');
+                    navLinks.setAttribute('aria-hidden', 'true');
+                    
+                    if (mobileMenuBtn) {
+                        mobileMenuBtn.classList.remove('active');
+                        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            });
+        });
+    }
+
+    // Responsive Handler
+    function handleResponsiveness() {
+        if (window.innerWidth <= 768) {
+            createMobileMenu();
+        } else {
+            // Remove mobile menu on larger screens
+            if (mobileMenuBtn) {
+                navbar.removeChild(mobileMenuBtn);
+                navLinks.classList.remove('active');
+                navLinks.removeAttribute('aria-hidden');
+                navLinks.removeAttribute('data-mobile-state');
+            }
+        }
+    }
+
+    // Event Listeners with Optimization
+    window.addEventListener('scroll', () => {
+        updateScrollProgress();
+        handleNavbarScroll();
+    }, { passive: true });
+
+    window.addEventListener('resize', handleResponsiveness);
+
+    // Initial Setup
+    createMobileMenu();
+    setupMobileNavLinkClosing();
+    handleResponsiveness();
+});
+
+// Performance Optimization: Passive Event Listeners
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
     });
 });
-        
+
+
+
+
 
 // Improved stats animation
 const stats = document.querySelectorAll('.stat-number');
@@ -135,62 +237,11 @@ portfolioCards.forEach(card => {
         card.style.transform = 'none';
     });
 });
+
 // Dynamic Copyright Year
 document.querySelector('footer p').innerHTML = 
-    `&copy; ${new Date().getFullYear()} Adonias Cayuqueo. All rights under MIT License.`;
-    
-// Mobile Menu Toggle
-let menuOpen = false;
-const createMobileMenu = () => {
-    // Only create the mobile menu button if the screen size is less than or equal to 768px
-    if (window.innerWidth <= 768) {
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        // If the button does not exist, create and append it
-        if (!mobileMenuBtn) {
-            const newMenuBtn = document.createElement('button');
-            newMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            newMenuBtn.className = 'mobile-menu-btn';
-            newMenuBtn.style.cssText = `
-                background: none;
-                border: none;
-                font-size: 1.5rem;
-                color: var(--primary);
-                cursor: pointer;
-                display: block;
-            `;
-            document.querySelector('.navbar').appendChild(newMenuBtn);
-            // Add the click event listener for toggling the menu
-            newMenuBtn.addEventListener('click', () => {
-                const navLinks = document.querySelector('.nav-links');
-                menuOpen = !menuOpen;
-                // Toggle navLinks visibility
-                if (menuOpen) {
-                    navLinks.style.display = 'flex';
-                    navLinks.style.flexDirection = 'column';
-                    navLinks.style.position = 'absolute';
-                    navLinks.style.top = '100%';
-                    navLinks.style.left = '0';
-                    navLinks.style.right = '0';
-                    navLinks.style.background = 'white';
-                    navLinks.style.padding = '1rem';
-                    navLinks.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-                    navLinks.style.transition = 'all 0.3s ease';  // Smooth transition for visibility
-                } else {
-                    navLinks.style.display = 'none';
-                }
-            });
-        }
-    } else {
-        // If the screen width is greater than 768px, ensure the button is removed
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        if (mobileMenuBtn) {
-            mobileMenuBtn.remove();  // Remove the button on large screens
-        } else{
-            // Add an event listener to handle resizing of the window
-            window.addEventListener('resize', createMobileMenu);
-        }
-    }
-};
+    `&copy; ${new Date().getFullYear()} Adonias Cayuqueo. All rights under `;
+
 
 // Enhanced JavaScript with new features
 document.addEventListener('DOMContentLoaded', function() {
@@ -261,53 +312,35 @@ hero.style.transform = `scale(1.1) translate(${mouseX * 20}px, ${mouseY * 20}px)
 
 });
 
-// AI Assistant Logic
-const assistantBtn = document.querySelector('.assistant-button');
-const assistantChat = document.querySelector('.assistant-chat');
-const closeChat = document.querySelector('.close-chat');
-const chatInput = document.querySelector('.chat-input input');
-const sendMessage = document.querySelector('.send-message');
-assistantBtn.addEventListener('click', () => {
-    assistantChat.style.display = 'flex';
-    assistantBtn.style.display = 'none';
+
+/*whatsapp button logic should be here.*/
+document.addEventListener('DOMContentLoaded', () => {
+    const sectionBtn = document.getElementById('sectionBtn');
+
+    // Optional: Add click event listener
+    sectionBtn.addEventListener('click', () => {
+        // Example action when button is clicked
+        console.log('Section button clicked');
+        // You can add your specific functionality here
+        // For example: open a new section, trigger a modal, etc.
+    });
+
+    // Optional: Add keyboard accessibility
+    sectionBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            sectionBtn.click();
+        }
+    });
 });
 
-closeChat.addEventListener('click', () => {
-    assistantChat.style.display = 'none';
-    assistantBtn.style.display = 'flex';
+// Optional: Additional tracking or analytics can be added here
+document.querySelector('.whatsapp-section-btn').addEventListener('click', () => {
+    console.log('WhatsApp contact button clicked');
 });
 
-// Simple chat logic
-sendMessage.addEventListener('click', () => {
-    const message = chatInput.value.trim();
-    if (!message) return;
-    addMessage('user', message);
-    // Simulate AI response (replace with actual AI integration)
-    setTimeout(() => {
-        addMessage('assistant', getAIResponse(message));
-    }, 1000);
-    chatInput.value = '';
-});
 
-function addMessage(type, content) {
-    const messagesDiv = document.querySelector('.chat-messages');
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${type}`;
-    messageDiv.textContent = content;
-    messagesDiv.appendChild(messageDiv);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-}
 
-function getAIResponse(message) {
-    // Simple response logic (replace with actual AI responses)
-    const responses = {
-        'pitch': 'Our investment process typically starts with a pitch deck review. Please ensure your deck includes market size, traction, and financials.',
-        'criteria': 'We focus on early-stage startups with strong growth potential, innovative technology, and exceptional teams.',
-        'default': 'Thank you for your message. One of our team members will follow up with more detailed information.'
-    };
-    const keyword = Object.keys(responses).find(key => message.toLowerCase().includes(key));
-    return responses[keyword] || responses.default;
-}
 
 // Add interactive timeline navigation
 document.querySelectorAll('.timeline-point').forEach(point => {
