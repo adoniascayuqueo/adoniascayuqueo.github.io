@@ -1,11 +1,11 @@
 :root {
-    --primary: #2c3e50;
-    --secondary: #e67e22;
-    --accent: #3498db;
-    --text: #000;
-    --background: background-image: url('images/home-topo-pattern.png'); /* Replace with your image path */
-    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --transition: all 0.3s ease;
+    --primary: #1A2B3C;               /* Deep midnight blue */
+    --secondary: #D4AF37;              /* Rich gold */
+    --accent: #5D4037;                 /* Sophisticated brown */
+    --text: #2C3E50;                   /* Deep charcoal */
+    --background: #F4F6F7;             /* Soft pearl gray */
+    --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 * {
@@ -16,12 +16,19 @@
 }
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Optima', 'Palatino Linotype', serif;
+    letter-spacing: 0.5px;
+    line-height: 1.7;
+    font-weight: 300;
     color: var(--text);
-    line-height: 1.6;
+    background: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 100%);
     overflow-x: hidden;
-    animation: fadeIn 3s ease-in-out;
-    transition: background 0.5s ease, color 0.5s ease;
+}
+
+h1, h2, h3 {
+    font-family: 'Didot', 'Bodoni', serif;
+    font-weight: 600;
+    text-rendering: optimizeLegibility;
 }
 
 /* Define the fadeIn animation */
@@ -38,23 +45,30 @@ body {
 /* Added smooth scroll behavior */
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 80px;
 }
 
+html {
+    scroll-padding-top: 80px;
+    scroll-behavior: smooth;
+    will-change: scroll-position;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
 
 /* Sophisticated Navigation */
 .navbar {
     position: fixed;
     width: 100%;
     /* background: rgba(255, 255, 255, 0.95); */ /*color of the navbar at the start*/
-    background-image: url('images/'); /* Replace with your image path */
-    backdrop-filter: blur(10px);
+    /* background-image: url('images/home-topo-pattern.png'); Replace with your image path */
+    backdrop-filter: blur(2px);
     padding: 1rem 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 1000;
     transition: var(--transition);
+    background: rgba(0, 0, 0, 0.1);
 }
 
 .navbar.scrolled {
@@ -74,7 +88,7 @@ html {
 }
 
 /* Added animated dots after logo */
-.logo::after {
+/* .logo::after {
     content: '';
     position: absolute;
     right: -20px;
@@ -82,11 +96,12 @@ html {
     width: 6px;
     height: 6px;
     background: var(--accent);
-    background-image: url('images/home-topo-pattern.png'); /* Replace with your image path */
+    background-image: url('images/home-topo-pattern.png'); Replace with your image path
 
     border-radius: 50%;
     animation: dotPulse 1.5s infinite;
 }
+*/
 
 .nav-links {
     transition: all 0.3s ease; /* Smooth transition for opening and closing */
@@ -120,11 +135,11 @@ html {
     width: 100%;
 }
 
-@keyframes dotPulse {
+/* @keyframes dotPulse {
     0% { transform: scale(1); opacity: 1; }
     50% { transform: scale(1.5); opacity: 0.5; }
     100% { transform: scale(1); opacity: 1; }
-}
+} */
 
 /* Hero Section Enhancements */
 .hero {
@@ -139,7 +154,8 @@ html {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('images/pexels-pixabay-road-315938.jpg'); /* Replace with your image path */
+    background-image: url('images/pexels-Aleksandar\ Pasaric-325185.jpg'); /* Replace with your image path */
+    background-attachment: fixed;
     background-size: cover;
     background-position: center;
     transform: scale(1.1);
@@ -268,6 +284,8 @@ html {
     overflow: hidden;
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
+    padding: 2%;
+    border-radius: 15px;
 }
 
 .stat-card::after {
@@ -315,14 +333,16 @@ html {
 
 /* Enhanced Portfolio Cards */
 .portfolio-card {
-    position: relative;
-    border-radius: 12px;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border-radius: 15px;
     overflow: hidden;
-    box-shadow: var(--card-shadow);
-    transition: var(--transition);
-    background: white;
-    transform-style: preserve-3d;
-    perspective: 1000px;
+    transform: perspective(1000px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.portfolio-card:hover {
+    transform: scale(1.025) rotateY(5deg);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
 }
 
 .portfolio-card::before {
@@ -444,6 +464,8 @@ html {
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+
 }
 
 .team-card-front {
@@ -533,6 +555,7 @@ html {
     padding: 6rem 5%;
     background: var(--primary);
     background-image: url('images/home-topo-pattern.png'); /* Replace with your image path */
+    background-attachment: fixed;
     color: white;
     text-align: center;
     clip-path: polygon(0 10%, 100% 0, 100% 90%, 0 100%);
@@ -612,15 +635,15 @@ section .video-main-page {
     align-items: center; /* Center vertically */
     height: 100vh; /* Full viewport height for vertical centering */
     background-color: #f8f9fa; /* Subtle background color for a polished look */
-    padding: 2rem; /* Add padding for spacing */
+    padding: 0.3rem; /* Add padding for spacing */
 }
 
 section .video-main-page iframe {
     border: 0; /* Remove default border */
     border-radius: 12px; /* Add rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
-    width: 80%; /* Adjust width as needed */
-    max-width: 900px; /* Limit maximum width for responsiveness */
+    width: 97%; /* Adjust width as needed */
+    max-width: 1000px; /* Limit maximum width for responsiveness */
     aspect-ratio: 16/9; /* Ensure proper video aspect ratio */
     object-fit: cover; /* Make sure the video scales nicely */
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
@@ -795,7 +818,7 @@ footer {
         padding: 1rem;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
     }
 
     .nav-links.active {
@@ -835,6 +858,7 @@ footer {
 padding: 6rem 5%;
 background: white;
 background-image: url('images/home-topo-pattern.png'); /* Replace with your image path */
+background-attachment: fixed;
 
 }
 
@@ -884,74 +908,48 @@ transform: translateY(-5px);
 box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-/* AI Assistant Styles */
-.ai-assistant {
-position: fixed;
-bottom: 2rem;
-right: 2rem;
-z-index: 1000;
+
+/*Whatsapp button.*/
+
+.whatsapp-section-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: #25D366; /* WhatsApp green */
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    z-index: 1000;
 }
 
-.assistant-button {
-width: 60px;
-height: 60px;
-background: var(--accent);
-border-radius: 50%;
-display: flex;
-align-items: center;
-justify-content: center;
-cursor: pointer;
-box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-transition: all 0.3s;
+.whatsapp-section-btn:hover {
+    background-color: #20c354;
+    transform: scale(1.05);
 }
 
-.assistant-button i {
-color: white;
-font-size: 1.5rem;
+.whatsapp-section-btn:active {
+    transform: scale(0.95);
 }
 
-.assistant-chat {
-position: absolute;
-bottom: 80px;
-right: 0;
-width: 350px;
-height: 500px;
-background: white;
-border-radius: 15px;
-box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-display: none;
-flex-direction: column;
+.whatsapp-section-btn svg {
+    width: 30px;
+    height: 30px;
+    stroke: white;
+    stroke-width: 2;
 }
 
-.chat-header {
-padding: 1rem;
-background: var(--primary);
-color: white;
-border-radius: 15px 15px 0 0;
-display: flex;
-justify-content: space-between;
-align-items: center;
-}
 
-.chat-messages {
-flex: 1;
-padding: 1rem;
-overflow-y: auto;
-}
 
-.chat-input {
-padding: 1rem;
-display: flex;
-gap: 0.5rem;
-border-top: 1px solid #e1e1e1;
-}
 
-.chat-input input {
-flex: 1;
-padding: 0.8rem;
-border: 1px solid #e1e1e1;
-border-radius: 25px;
-}
+
+
 
 /* Market Insights Styles */
 .market-insights {
