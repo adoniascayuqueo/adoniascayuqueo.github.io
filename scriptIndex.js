@@ -340,8 +340,6 @@ document.querySelector('.whatsapp-section-btn').addEventListener('click', () => 
 });
 
 
-
-
 // Add interactive timeline navigation
 document.querySelectorAll('.timeline-point').forEach(point => {
     point.addEventListener('mouseenter', () => {
@@ -358,8 +356,8 @@ function initializeMarketInsights() {
     const trendingData = [
         { sector: 'AI/ML', growth: 85 },
         { sector: 'FinTech', growth: 65 },
-        { sector: 'HealthTech', growth: 55 },
-        { sector: 'CleanTech', growth: 45 },
+        { sector: 'Solar Energy', growth: 55 },
+        { sector: 'SustainableTech', growth: 45 },
         { sector: 'EdTech', growth: 35 }
     ];
     // Sample metrics data
