@@ -174,11 +174,14 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 })
 
 // Observe elements
+
 document.querySelectorAll('.portfolio-card, .team-card, .stat-card').forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(30px)';
     observer.observe(el);
 });
+
+
 
 // Smooth Scrolling
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -267,18 +270,18 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(floater);
     }
     // Mouse parallax effect for hero section
-    const hero = document.querySelector('.hero');
-    hero.addEventListener('mousemove', (e) => {
-        const mouseX = e.clientX / window.innerWidth - 0.5;
-        const mouseY = e.clientY / window.innerHeight - 0.5;
+    // const hero = document.querySelector('.hero');
+    // hero.addEventListener('mousemove', (e) => {
+    //     const mouseX = e.clientX / window.innerWidth - 0.5;
+    //     const mouseY = e.clientY / window.innerHeight - 0.5;
         
-        hero.style.transform = `
-            perspective(1000px)
-            rotateY(${mouseX * 5}deg)
-            rotateX(${-mouseY * 5}deg)
-        `;
-    });
-    // Rest of your existing JavaScript
+    //     hero.style.transform = `
+    //         perspective(1000px)
+    //         rotateY(${mouseX * 0}deg)
+    //         rotateX(${-mouseY * 0}deg)
+    //     `;
+    // });
+    // Rest of your existing JavaScript, Personally I separate it all.
 });
 
 // Team section filtering
@@ -303,14 +306,14 @@ filterButtons.forEach(button => {
 });
 
 // Hero section parallax
-document.addEventListener('mousemove', (e) => {
-const hero = document.querySelector('.hero-background');
-const mouseX = e.clientX / window.innerWidth - 0.5;
-const mouseY = e.clientY / window.innerHeight - 0.5;
+// document.addEventListener('mousemove', (e) => {
+// const hero = document.querySelector('.hero-background');
+// const mouseX = e.clientX / window.innerWidth - 0.5;
+// const mouseY = e.clientY / window.innerHeight - 0.5;
 
-hero.style.transform = `scale(1.1) translate(${mouseX * 20}px, ${mouseY * 20}px)`;
+// hero.style.transform = `scale(1.1) translate(${mouseX * 20}px, ${mouseY * 20}px)`;
 
-});
+// });
 
 
 /*whatsapp button logic should be here.*/
@@ -450,3 +453,20 @@ function populateMetrics(data) {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', initializeMarketInsights);
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const backgrounds = document.querySelectorAll(".hero-background");
+    let currentIndex = 0;
+
+    setInterval(() => {
+        // Remove "active" from the current image
+        backgrounds[currentIndex].classList.remove("active");
+        // Move to the next image (loop back to 0 if at the end)
+        currentIndex = (currentIndex + 1) % backgrounds.length;
+        // Add "active" to the next image
+        backgrounds[currentIndex].classList.add("active");
+    }, 5000); // Change every 5 seconds
+});
