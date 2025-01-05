@@ -584,6 +584,31 @@ header {
     color: #0056b3;
 }
 
+/* Iframe Styles */
+.news-grid iframe {
+    display: block;
+    width: 100%; /* Responsive width */
+    height: 100%;
+    max-width: 600px; /* Maximum width to prevent overflow */
+    margin: auto; /* Center horizontally and add vertical spacing */
+    border: none; /* Remove default border */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Add a subtle shadow */
+    border-radius: 4px;
+    transition: transform 0.3s ease;
+    margin-bottom: 2rem;
+}
+.news-grid iframe:hover {
+    transform: scale(1.03)
+}
+
+
+/* Responsive Iframe */
+@media (max-width: 768px) {
+    .news-grid iframe {
+        margin: 1rem 1rem 2rem 1rem; /* Add more horizontal space in mobile */
+  }
+}
+
 /* Our Collective Work Section */
 .our-collective-work {
     padding: 50px 0;
