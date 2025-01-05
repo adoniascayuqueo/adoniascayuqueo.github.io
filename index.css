@@ -205,7 +205,7 @@ header {
 .burger-menu span {
     display: block;
     width: 100%;
-    height: 3px;
+    height: 2px;
     background-color: #000;
     border-radius: 5px;
     transition: all 0.3s ease;
@@ -326,12 +326,13 @@ header {
 /* Hero Section Styles */
 .hero {
     position: relative;
-    height: 100vh;
+    height: 110vh;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
+    background-color: #000; /* Fallback background color */
+     color: var(--light-text);
 }
 
 .hero-video {
@@ -363,7 +364,7 @@ header {
 }
 
 .hero h1 {
-    color: #fff;
+    color: var(--light-text);
     font-size: 4rem;
     line-height: 1.2;
     margin-bottom: 20px;
@@ -371,28 +372,82 @@ header {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     animation: fadeInUp 1s ease-out;
     font-weight: 700;
+    position: relative; /* For the underline effect */
 }
+.hero h1::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 4px;
+    width: 100%;
+    height: 2px;
+    border-bottom: 4px dashed var(--primary-color);
+}
+
 
 .highlight-text {
     color: #40E0D0;
 }
 
-.btn-strategy {
-    display: inline-block;
-    background-color: #fff;
+.hero .btn-strategy {
+  display: inline-block;
+    background-color: var(--light-text);
     color: #333;
     padding: 12px 24px;
     border-radius: 4px;
     font-weight: 500;
     text-decoration: none;
-    transition: background-color 0.3s ease;
-    border: 1px solid #ffc107;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+     border: none;
     margin-top: 20px;
 }
 
-.btn-strategy:hover {
+.hero .btn-strategy:hover {
     background-color: #ffc107;
     color: #fff;
+       transform: scale(1.05);
+}
+.hero p {
+    font-size: 1.2rem;
+    color: var(--light-text);
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+}
+.hero p::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 1px;
+     border-bottom: 2px dashed var(--primary-color);
+}
+.animated-word {
+    display: inline-flex;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+}
+.animated-word .char {
+    display: inline-block;
+    transition: transform 0.3s ease-in-out;
+}
+.animated-word:hover .char {
+   transform: translateY(-10px);
+
+}
+.animated-word .char::before{
+  content: attr(data-text);
+  position: absolute;
+    top: 100%;
+  left: 0;
+    opacity: 0;
+      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+.animated-word:hover .char::before {
+     opacity: 1;
+      transform: translateY(-50px);
 }
 
 /* FADE IN ANIMATIONS */
@@ -838,7 +893,7 @@ header {
 
 /* Footer Styles */
 footer {
-    background-color: #222;
+    background: linear-gradient(135deg, #2c3e50, #000000); /* Dark Gradient */     
     color: #eee;
     padding: 50px 0;
 }
@@ -1018,18 +1073,3 @@ footer a:hover {
 }
 
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700");
-
-footer{
-    height:100%;
-    margin: 0;
-    --x: calc(var(--posX, 0) * 1px);
-    --y: calc(var(--posY, 0) * 1px);
-    background-image: 
-      linear-gradient(115deg, rgb(211 255 215), rgb(0 0 0)), 
-      radial-gradient( 90% 100% at calc( 50% + var(--x)) calc( 0% + var(--y)), rgb(200 200 200), rgb(022 000 045)), 
-      radial-gradient(100% 100% at calc( 80% - var(--x)) calc( 0% - var(--y)), rgb(250 255 000), rgb(036 000 000)), 
-      radial-gradient(150% 210% at calc(100% + var(--x)) calc( 0% + var(--y)), rgb(020 175 125), rgb(000 010 255)), 
-      radial-gradient(100% 100% at calc(100% - var(--x)) calc(30% - var(--y)), rgb(255 077 000), rgb(000 200 255)), 
-      linear-gradient(60deg, rgb(255 000 000), rgb(120 086 255));
-    background-blend-mode: overlay, overlay, difference, difference, difference, normal;
-}
